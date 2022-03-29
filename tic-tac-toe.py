@@ -1,6 +1,13 @@
-# def display_board(board):
+def display_board(board):
     # Funkcja, ktora przyjmuje jeden parametr zawierajacy biezacy stan tablicy
     # i wyswietla go w oknie konsoli.
+    rows = len(board)
+    print("+-------+-------+-------+")
+    for r in range(rows):
+        print("|       |       |       |")
+        print("|  ", board[r][0], "  |  ", board[r][1], "  |  ", board[r][2], "  |")
+        print("|       |       |       |")
+        print("+-------+-------+-------+")
     
 
 
@@ -27,4 +34,5 @@
 board = [[1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]]
-print(board)
+display_board(board)
+
