@@ -61,16 +61,12 @@ def victory_for(board, sign):
 
 
 def draw_move(board):
-    while True:
-        move = randrange(9)
-        if move == 5:
-            continue
-        else:
-            for i in board:
-                if move in i:
-                    index = i.index(move)            
-                    i[index] = "X"
-            return board                
+    free = make_list_of_free_fields(board)
+    cnt = len(free)
+    if cnt > 0:
+        this = randrange(cnt)
+        row, col = free[this]
+        board[row][col] = 'X'              
 
 
 board = [[1, 2, 3],
