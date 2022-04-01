@@ -11,7 +11,7 @@ def display_board(board):
         print("|       |       |       |")
         print("+-------+-------+-------+")
     
-def enter_move(board):
+def enter_move(board, playersign):
     ok = False
     while not ok:
         move = input("Wykonaj swój ruch: ")
@@ -27,7 +27,7 @@ def enter_move(board):
         if not ok:
             print("Pole jest zajęte - proszę spróbować ponownie!")
             continue
-    board[row][col] = 'O'
+    board[row][col] = playersign
 
 def make_list_of_free_fields(board):
     free_fields = []
@@ -37,11 +37,11 @@ def make_list_of_free_fields(board):
                 free_fields.append((row, col))
     return free_fields
 
-def victory_for(board, sign):
-    if sign == "X":
-        who = "komputer"
-    elif sign == "O":
+def victory_for(board, sign, playersign):
+    if sign == playersign:
         who = "ty"
+    elif sign != playersign:
+        who = "komputer"
     else:
         who = None
     cross1 = cross2 = True
@@ -52,37 +52,54 @@ def victory_for(board, sign):
             return who
         if board[rc][rc] != sign:
             cross1 = False
-        if board[2 - rc][2 - rc] != sign:
+        if board[2][0] != sign or board[1][1] != sign or board[0][2] != sign:
             cross2 = False
     if cross1 or cross2:
         return who
     return None
 
-
-
-def draw_move(board):
+def draw_move(board, computersign):
     free = make_list_of_free_fields(board)
     cnt = len(free)
     if cnt > 0:
         this = randrange(cnt)
         row, col = free[this]
-        board[row][col] = 'X'              
+        board[row][col] = computersign
+
+def choose_sign():    
+    while True:
+        playersign = input("Wybierz jakim znakiem chcesz zagrać (1 - O, 2 - X): ")
+        if playersign not in [1, 2] and playersign not in['1', '2']:
+            print("Nie wybrano poprawnego znaku - wybierz ponownie!")
+            continue
+        else:
+            if int(playersign) == 1:
+                playersign = 'O'
+                computersign = 'X'
+            else:
+                playersign = 'X'
+                computersign = 'O'
+            return playersign, computersign           
 
 
 board = [[1, 2, 3],
-        [4, 'X', 6],
+        [4, 5, 6],
         [7, 8, 9]]
 
 free = make_list_of_free_fields(board)
 playerturn = True
+signs = choose_sign()
+player = signs[0]
+computer = signs[1]
+
 while len(free):
     display_board(board)
     if playerturn:
-        enter_move(board)
-        victory = victory_for(board, 'O')
+        enter_move(board, player)
+        victory = victory_for(board, player, player)
     else:
-        draw_move(board)
-        victory = victory_for(board, 'X')
+        draw_move(board, computer)
+        victory = victory_for(board, computer, player)
     if victory != None:
         break
     playerturn = not playerturn
@@ -92,6 +109,6 @@ display_board(board)
 if victory == "ty":
     print("Wygrałeś!")
 elif victory == "komputer":
-    print("Wygrał komputer!")
+    print("Komputer wygrał!")
 else:
     print("Remis!")
